@@ -1,25 +1,33 @@
+<table>
+  <thead>
+  <tr>
 
-  <table>
-    <thead>
-    <tr>
-      <td [attr.colspan]="gcpData.headerTitles.length">
-        <input type='file'  (change)="fileChanged($event)">
-      </td>
-    </tr>
-    <tr>
-      <td *ngFor="let headerTitle of gcpData.headerTitles" (click)="orderBy(headerTitle)">
-        <span class="pointer">{{headerTitle}}</span>
+    <td [attr.colspan]="gcpData.headerTitles.length">
+      <input type='file' (change)="fileChanged($event)">
+    </td>
+  </tr>
+  <tr>
+    <td></td>
+    <td *ngFor="let headerTitle of gcpData.headerTitles">
+
+      <div>
+        <span class="pointer" (click)="orderBy(headerTitle)">{{headerTitle}}</span>
         <span *ngIf="ordering[headerTitle]"> - {{ordering[headerTitle]}}</span>
-      </td>
-    </tr>
+      </div>
+      <div *ngIf="headerTitle === 'name'">
+        <input type="text" [(ngModel)]="nameFilterValue">
+      </div>
+    </td>
+  </tr>
 
-    </thead>
+  </thead>
 
-    <tbody>
-    <tr *ngFor="let gcpLine of gcpData.gcpArray" [ngClass]="[gcpLine.error?'error-line':'']">
+  <tbody>
+  <tr *ngFor="let gcpLine of gcpData.gcpArray | nameFilter:nameFilterValue ; let idx = index" [ngClass]="[gcpLine.error?'error-line':'']">
+    <td class="pointer" (click)="remove(idx)">x</td>
     <td *ngFor="let gcpKey of gcpData.headerTitles">
       {{gcpLine[gcpKey] }}
     </td>
-    </tr>
-    </tbody>
-  </table>
+  </tr>
+  </tbody>
+</table>

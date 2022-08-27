@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {CsvArrayService} from "../../services/csv-array.service";
 import {orderBy} from 'lodash';
 
+import {uniqBy} from 'lodash';
+
 
 @Component({
   selector: 'app-gcp-list',
@@ -13,6 +15,7 @@ export class GcpListComponent implements OnInit {
   JSON = JSON;
   Object = Object;
   ordering: any = {};
+  nameFilterValue: any;
 
 
   constructor(private csvArrayService: CsvArrayService) {
@@ -36,15 +39,8 @@ export class GcpListComponent implements OnInit {
             return {...pa, idx: pa.idx + this.gcpData.gcpArray.length}
           })
 
-          const helperNames: any = {}
-          this.gcpData.gcpArray = [...this.gcpData.gcpArray, ...parsed.gcpArray].filter((gcp) => {
-            if (helperNames[gcp.name]) {
-              return false
-            } else {
-              helperNames[gcp.name] = true;
-              return true
-            }
-          })
+
+          this.gcpData.gcpArray = uniqBy([...this.gcpData.gcpArray, ...parsed.gcpArray], 'name')
         } else {
 
           this.gcpData = parsed
@@ -80,8 +76,11 @@ export class GcpListComponent implements OnInit {
     }
     this.gcpData.gcpArray = orderBy(this.gcpData.gcpArray,[headerTitle],this.ordering[headerTitle])
     this.gcpData = {...this.gcpData}
+  }
 
-    // todo lodash
 
+  remove(idx: number) {
+    this.gcpData.gcpArray.splice(idx, 1)
+    this.gcpData = {...this.gcpData}
   }
 }
