@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {CsvArrayService} from "../../services/csv-array.service";
+import {orderBy} from 'lodash';
+
 
 @Component({
   selector: 'app-gcp-list',
@@ -10,6 +12,7 @@ export class GcpListComponent implements OnInit {
   gcpData: { headerTitles: string[]; gcpArray: any[] } = {headerTitles: [], gcpArray: []};
   JSON = JSON;
   Object = Object;
+  ordering: any = {};
 
 
   constructor(private csvArrayService: CsvArrayService) {
@@ -33,16 +36,22 @@ export class GcpListComponent implements OnInit {
             return {...pa, idx: pa.idx + this.gcpData.gcpArray.length}
           })
 
-          const helperNames:any = {}
-          this.gcpData.gcpArray = [...this.gcpData.gcpArray, ...parsed.gcpArray].filter((gcp)=>{
-            if(helperNames[gcp.name]){ return false}
-            else{helperNames[gcp.name] = true; return true}
+          const helperNames: any = {}
+          this.gcpData.gcpArray = [...this.gcpData.gcpArray, ...parsed.gcpArray].filter((gcp) => {
+            if (helperNames[gcp.name]) {
+              return false
+            } else {
+              helperNames[gcp.name] = true;
+              return true
+            }
           })
         } else {
 
           this.gcpData = parsed
         }
 
+
+        this.gcpData.gcpArray = orderBy(this.gcpData.gcpArray,Object.keys(this.ordering),Object.values(this.ordering))
         this.gcpData = {...this.gcpData}
 
       }
@@ -58,5 +67,21 @@ export class GcpListComponent implements OnInit {
 
     // this.files = $event?.target?.files || []
     // target.files
+  }
+
+  orderBy(headerTitle: string) {
+    if (this.ordering[headerTitle]) {
+      const orderBy = this.ordering[headerTitle] === 'asc' ? 'desc' : 'asc'
+      this.ordering = {}
+      this.ordering[headerTitle] = orderBy
+    } else {
+      this.ordering = {}
+      this.ordering[headerTitle] = 'asc'
+    }
+    this.gcpData.gcpArray = orderBy(this.gcpData.gcpArray,[headerTitle],this.ordering[headerTitle])
+    this.gcpData = {...this.gcpData}
+
+    // todo lodash
+
   }
 }

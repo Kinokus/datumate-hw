@@ -2,19 +2,23 @@
   <table>
     <thead>
     <tr>
-      <td *ngFor="let headerTitle of gcpData.headerTitles">{{headerTitle}}</td>
-    </tr>
-    <tr>
       <td [attr.colspan]="gcpData.headerTitles.length">
         <input type='file'  (change)="fileChanged($event)">
       </td>
     </tr>
+    <tr>
+      <td *ngFor="let headerTitle of gcpData.headerTitles" (click)="orderBy(headerTitle)">
+        <span class="pointer">{{headerTitle}}</span>
+        <span *ngIf="ordering[headerTitle]"> - {{ordering[headerTitle]}}</span>
+      </td>
+    </tr>
+
     </thead>
 
     <tbody>
     <tr *ngFor="let gcpLine of gcpData.gcpArray" [ngClass]="[gcpLine.error?'error-line':'']">
     <td *ngFor="let gcpKey of gcpData.headerTitles">
-      {{gcpLine[gcpKey] || 'n/a'}}
+      {{gcpLine[gcpKey] }}
     </td>
     </tr>
     </tbody>
