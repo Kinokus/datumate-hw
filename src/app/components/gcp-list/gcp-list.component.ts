@@ -7,14 +7,15 @@ import {CsvArrayService} from "../../services/csv-array.service";
   styleUrls: ['./gcp-list.component.css']
 })
 export class GcpListComponent implements OnInit {
-  gcpArray: { headerTitles: string[]; gcpArray: any[] } = {headerTitles: [], gcpArray: []};
+  gcpData: { headerTitles: string[]; gcpArray: any[] } = {headerTitles: [], gcpArray: []};
   JSON = JSON;
+  Object= Object;
 
   constructor(private csvArrayService: CsvArrayService) {
   }
 
   async ngOnInit(): Promise<void> {
-    this.gcpArray = await this.csvArrayService.fetchGcpArray()
+    this.gcpData = await this.csvArrayService.fetchGcpArray()
   }
 
 }

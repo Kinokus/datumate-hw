@@ -1,3 +1,15 @@
-<pre>
-  {{JSON.stringify (gcpArray, null, 2)}}
-</pre>
+  <table>
+    <thead>
+    <tr>
+      <td *ngFor="let headerTitle of gcpData.headerTitles">{{headerTitle}}</td>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr *ngFor="let gcpLine of gcpData.gcpArray" [ngClass]="[gcpLine.error?'error-line':'']">
+    <td *ngFor="let gcpKey of gcpData.headerTitles">
+      {{gcpLine[gcpKey] || 'n/a'}}
+    </td>
+    </tr>
+    </tbody>
+  </table>
