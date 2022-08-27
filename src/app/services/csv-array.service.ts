@@ -10,12 +10,13 @@ export class CsvArrayService {
   }
 
   async fetchGcpArray() {
-
-    const workers: any = {name: String, n: parseFloat, e: parseFloat, h: parseFloat}
-
     const gcpRawResponse = await fetch('assets/test.gcp.csv');
     const gcpRaw = await gcpRawResponse.text()
+    return this.gcpParse(gcpRaw)
+  }
 
+  gcpParse(gcpRaw: string) {
+    const workers: any = {name: String, n: parseFloat, e: parseFloat, h: parseFloat}
     const gcpLines = gcpRaw.split(/\r?\n/);
     const gcpArray = []
     const headerTitles = [...gcpLines[0].split(',')]
@@ -25,7 +26,7 @@ export class CsvArrayService {
       const gcpStringValues = gcpLines[gcpIdx].split(',')
 
       const errorArray: any = []
-
+      gcpObj.idx = gcpIdx
       if (gcpStringValues.length !== headerTitles.length) {
         const errorObj: any = {}
         if (gcpStringValues.length < headerTitles.length) {
@@ -39,10 +40,9 @@ export class CsvArrayService {
 
       } else {
         headerTitles.forEach((ht: string, htIdx: number) => {
-          gcpObj.idx = gcpIdx
+
           const errorObj: any = {}
           const result = workers[ht]?.(gcpStringValues[htIdx])
-          console.log(workers[ht],gcpStringValues[htIdx],result)
           gcpObj[ht] = result || gcpStringValues[htIdx]
           switch (String(result)) {
             case 'NaN': {
@@ -70,5 +70,6 @@ export class CsvArrayService {
     }
     return {headerTitles: ['idx', ...headerTitles, 'error'], gcpArray}
   }
+
 
 }

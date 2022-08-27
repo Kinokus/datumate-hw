@@ -1,7 +1,13 @@
+
   <table>
     <thead>
     <tr>
       <td *ngFor="let headerTitle of gcpData.headerTitles">{{headerTitle}}</td>
+    </tr>
+    <tr>
+      <td [attr.colspan]="gcpData.headerTitles.length">
+        <input type='file'  (change)="fileChanged($event)">
+      </td>
     </tr>
     </thead>
 
