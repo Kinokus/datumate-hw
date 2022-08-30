@@ -80,7 +80,7 @@ export class GcpListComponent implements OnInit {
 
 
   remove(idx: number) {
-    this.gcpData.gcpArray.splice(idx, 1)
+    this.gcpData.gcpArray = this.gcpData.gcpArray.splice(idx, 1)
     this.gcpData = {...this.gcpData}
   }
 }
